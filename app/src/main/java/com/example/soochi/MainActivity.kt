@@ -24,48 +24,48 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-
-            val goods=findViewById<EditText>(R.id.goods)
-            val enter=findViewById<Button>(R.id.enter)
-            val listView=findViewById<ListView>(R.id.goodsList)
-            enter.isEnabled=false
-            goods.requestFocus()
-            goods.addTextChangedListener(object: TextWatcher{
-                override fun afterTextChanged(s: Editable?) {
-                    enter.isEnabled=!s.isNullOrBlank()
-                }
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            })
-            goodsList= mutableListOf()
-            loadList()
-            adapter = GoodsAdapter(
-                this,
-                goodsList,
-                onDelete = { itemToDelete ->
-                    goodsList.remove(itemToDelete)
-                    adapter.notifyDataSetChanged()
-                    saveList()
-                },
-                onUpdate = {updatedItem->
-                    saveList()
-                }
-            )
-            listView.adapter=adapter
-            enter.setOnClickListener {
-                val item=goods.text.toString().trim()
-                val newItem=GoodItem(item,false)
-                goodsList.add(newItem)
-                adapter.notifyDataSetChanged()
-                goods.text.clear()
-                saveList()
-                Toast.makeText(this,"$item सूची मे जोड़ दी गई है",Toast.LENGTH_SHORT).show()
-
-            }
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val goods=findViewById<EditText>(R.id.goods)
+        val enter=findViewById<Button>(R.id.enter)
+        val listView=findViewById<ListView>(R.id.goodsList)
+        enter.isEnabled=false
+        goods.requestFocus()
+        goods.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                enter.isEnabled=!s.isNullOrBlank()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+        goodsList= mutableListOf()
+        loadList()
+        adapter = GoodsAdapter(
+            this,
+            goodsList,
+            onDelete = { itemToDelete ->
+                goodsList.remove(itemToDelete)
+                adapter.notifyDataSetChanged()
+                saveList()
+            },
+            onUpdate = {updatedItem->
+                saveList()
+            }
+        )
+        listView.adapter=adapter
+        enter.setOnClickListener {
+            val item=goods.text.toString().trim()
+            val newItem=GoodItem(item,false)
+            goodsList.add(newItem)
+            adapter.notifyDataSetChanged()
+            goods.text.clear()
+            saveList()
+            Toast.makeText(this,"$item सूची मे जोड़ दी गई है",Toast.LENGTH_SHORT).show()
+
+        }
+
     }
     private fun saveList(){
         val prefs=getSharedPreferences("my_prefs", MODE_PRIVATE)
